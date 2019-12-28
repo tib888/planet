@@ -29,11 +29,12 @@ type alias Model =
   , planetZoom : Float
   , idx : Int
   , count : Int
+  , speed : Int
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( Model Time.utc (Time.millisToPosix 0) (List.map start masses) 1e-9 1 0 0
+  ( Model Time.utc (Time.millisToPosix 0) (List.map start masses) 1e-9 1 0 0 6000
   , Cmd.batch
       [ Task.perform AdjustTimeZone Time.here
       , Task.perform Tick Time.now
@@ -51,15 +52,22 @@ type Msg
   | ZoomOut
   | PlanetPlus
   | PlanetMinus
+  | SpeedPlus
+  | SpeedMinus
+
+repeatedApply: Int -> a -> (a -> a) -> a
+repeatedApply n data func =
+  if n < 1 then
+    data
+  else 
+    repeatedApply (n - 1) (func data) func
+
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
-  let
-    store = 0 == modBy 100 model.count
-  in 
     case msg of
       Tick newTime ->
-        ( { model | count = model.count + 1, time = newTime, masses = updatePlanets store 3600 model.masses } 
+        ( { model | count = model.count + 1, time = newTime, masses = updatePlanets True 60 (repeatedApply model.speed model.masses (updatePlanets False 15)) } 
         , Cmd.none
         )
 
@@ -98,11 +106,25 @@ update msg model =
         , Cmd.none
         )
 
+      SpeedPlus ->
+        ( { model | speed = model.speed * 2 }
+        , Cmd.none
+        )
+
+      SpeedMinus ->
+        ( { model | speed = 
+            if model.speed > 1 then 
+              model.speed // 2 
+            else 
+              1 }
+        , Cmd.none
+        )
+
 -- SUBSCRIPTIONS
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-  Time.every 16 Tick
+  Time.every 100 Tick
 
 -- VIEW
 
@@ -164,12 +186,14 @@ view model =
   --   second = toFloat (Time.toSecond model.zone model.time)
   in
   div []
-    [ button [ onClick ZoomOut ] [ Html.text "s-" ]
-    , button [ onClick ZoomIn ] [ Html.text "s+" ]
-    , button [ onClick PlanetZoomOut ] [ Html.text "b-" ]
-    , button [ onClick PlanetZoomIn ] [ Html.text "b+" ]
-    , button [ onClick PlanetMinus ] [ Html.text "c-" ]
-    , button [ onClick PlanetPlus ] [ Html.text "c+" ]
+    [ button [ onClick ZoomOut ] [ Html.text "scale -" ]
+    , button [ onClick ZoomIn ] [ Html.text "scale +" ]
+    , button [ onClick PlanetZoomOut ] [ Html.text "planet scale -" ]
+    , button [ onClick PlanetZoomIn ] [ Html.text "planet scale +" ]
+    , button [ onClick PlanetMinus ] [ Html.text "center -" ]    
+    , button [ onClick PlanetPlus ] [ Html.text "center +" ]
+    , button [ onClick SpeedMinus ] [ Html.text "speed -" ]
+    , button [ onClick SpeedPlus ] [ Html.text "speed +" ]
     , svg
       [ viewBox "0 0 1024 600"
       , width "1024"

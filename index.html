@@ -5207,9 +5207,9 @@ var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$AdjustTimeZone = function (a) {
 	return {$: 'AdjustTimeZone', a: a};
 };
-var $author$project$Main$Model = F7(
-	function (zone, time, masses, zoom, planetZoom, idx, count) {
-		return {count: count, idx: idx, masses: masses, planetZoom: planetZoom, time: time, zone: zone, zoom: zoom};
+var $author$project$Main$Model = F8(
+	function (zone, time, masses, zoom, planetZoom, idx, count, speed) {
+		return {count: count, idx: idx, masses: masses, planetZoom: planetZoom, speed: speed, time: time, zone: zone, zoom: zoom};
 	});
 var $author$project$Main$Tick = function (a) {
 	return {$: 'Tick', a: a};
@@ -5382,7 +5382,7 @@ var $author$project$Planet$start = function (b) {
 var $elm$time$Time$utc = A2($elm$time$Time$Zone, 0, _List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A7(
+		A8(
 			$author$project$Main$Model,
 			$elm$time$Time$utc,
 			$elm$time$Time$millisToPosix(0),
@@ -5390,7 +5390,8 @@ var $author$project$Main$init = function (_v0) {
 			1e-9,
 			1,
 			0,
-			0),
+			0,
+			6000),
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -5798,10 +5799,26 @@ var $elm$time$Time$every = F2(
 			A2($elm$time$Time$Every, interval, tagger));
 	});
 var $author$project$Main$subscriptions = function (_v0) {
-	return A2($elm$time$Time$every, 16, $author$project$Main$Tick);
+	return A2($elm$time$Time$every, 100, $author$project$Main$Tick);
 };
-var $elm$core$Basics$modBy = _Basics_modBy;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Main$repeatedApply = F3(
+	function (n, data, func) {
+		repeatedApply:
+		while (true) {
+			if (n < 1) {
+				return data;
+			} else {
+				var $temp$n = n - 1,
+					$temp$data = func(data),
+					$temp$func = func;
+				n = $temp$n;
+				data = $temp$data;
+				func = $temp$func;
+				continue repeatedApply;
+			}
+		}
+	});
 var $author$project$Vector$scalarMul = F2(
 	function (l, r) {
 		return ((l.x * r.x) + (l.y * r.y)) + (l.z * r.z);
@@ -5862,7 +5879,6 @@ var $author$project$Planet$updatePlanets = F3(
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		var store = !A2($elm$core$Basics$modBy, 100, model.count);
 		switch (msg.$) {
 			case 'Tick':
 				var newTime = msg.a;
@@ -5871,7 +5887,15 @@ var $author$project$Main$update = F2(
 						model,
 						{
 							count: model.count + 1,
-							masses: A3($author$project$Planet$updatePlanets, store, 3600, model.masses),
+							masses: A3(
+								$author$project$Planet$updatePlanets,
+								true,
+								60,
+								A3(
+									$author$project$Main$repeatedApply,
+									model.speed,
+									model.masses,
+									A2($author$project$Planet$updatePlanets, false, 15))),
 							time: newTime
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -5912,11 +5936,25 @@ var $author$project$Main$update = F2(
 						model,
 						{idx: model.idx + 1}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'PlanetMinus':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{idx: model.idx - 1}),
+					$elm$core$Platform$Cmd$none);
+			case 'SpeedPlus':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{speed: model.speed * 2}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							speed: (model.speed > 1) ? ((model.speed / 2) | 0) : 1
+						}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5924,6 +5962,8 @@ var $author$project$Main$PlanetMinus = {$: 'PlanetMinus'};
 var $author$project$Main$PlanetPlus = {$: 'PlanetPlus'};
 var $author$project$Main$PlanetZoomIn = {$: 'PlanetZoomIn'};
 var $author$project$Main$PlanetZoomOut = {$: 'PlanetZoomOut'};
+var $author$project$Main$SpeedMinus = {$: 'SpeedMinus'};
+var $author$project$Main$SpeedPlus = {$: 'SpeedPlus'};
 var $author$project$Main$ZoomIn = {$: 'ZoomIn'};
 var $author$project$Main$ZoomOut = {$: 'ZoomOut'};
 var $elm$html$Html$button = _VirtualDom_node('button');
@@ -6078,7 +6118,7 @@ var $author$project$Main$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('s-')
+						$elm$html$Html$text('scale -')
 					])),
 				A2(
 				$elm$html$Html$button,
@@ -6088,7 +6128,7 @@ var $author$project$Main$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('s+')
+						$elm$html$Html$text('scale +')
 					])),
 				A2(
 				$elm$html$Html$button,
@@ -6098,7 +6138,7 @@ var $author$project$Main$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('b-')
+						$elm$html$Html$text('planet scale -')
 					])),
 				A2(
 				$elm$html$Html$button,
@@ -6108,7 +6148,7 @@ var $author$project$Main$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('b+')
+						$elm$html$Html$text('planet scale +')
 					])),
 				A2(
 				$elm$html$Html$button,
@@ -6118,7 +6158,7 @@ var $author$project$Main$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('c-')
+						$elm$html$Html$text('center -')
 					])),
 				A2(
 				$elm$html$Html$button,
@@ -6128,7 +6168,27 @@ var $author$project$Main$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('c+')
+						$elm$html$Html$text('center +')
+					])),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick($author$project$Main$SpeedMinus)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('speed -')
+					])),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick($author$project$Main$SpeedPlus)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('speed +')
 					])),
 				A2(
 				$elm$svg$Svg$svg,
