@@ -5207,10 +5207,37 @@ var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$AdjustTimeZone = function (a) {
 	return {$: 'AdjustTimeZone', a: a};
 };
-var $author$project$Main$Model = F8(
-	function (zone, time, masses, zoom, planetZoom, idx, count, speed) {
-		return {count: count, idx: idx, masses: masses, planetZoom: planetZoom, speed: speed, time: time, zone: zone, zoom: zoom};
-	});
+var $author$project$Main$Model = function (zone) {
+	return function (time) {
+		return function (masses) {
+			return function (zoom) {
+				return function (planetZoom) {
+					return function (idx) {
+						return function (count) {
+							return function (speed) {
+								return function (mass) {
+									return function (vx) {
+										return function (vy) {
+											return function (vz) {
+												return function (px) {
+													return function (py) {
+														return function (pz) {
+															return {count: count, idx: idx, mass: mass, masses: masses, planetZoom: planetZoom, px: px, py: py, pz: pz, speed: speed, time: time, vx: vx, vy: vy, vz: vz, zone: zone, zoom: zoom};
+														};
+													};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 var $author$project$Main$Tick = function (a) {
 	return {$: 'Tick', a: a};
 };
@@ -5227,112 +5254,112 @@ var $elm$time$Time$Zone = F2(
 	});
 var $elm$time$Time$customZone = $elm$time$Time$Zone;
 var $elm$time$Time$here = _Time_here(_Utils_Tuple0);
-var $author$project$Planet$PlanetInit = function (a) {
+var $author$project$Planets$PlanetInit = function (a) {
 	return {$: 'PlanetInit', a: a};
 };
-var $author$project$Planet$sun = $author$project$Planet$PlanetInit(
-	{color: 'yellow', d: 0, dist: 0, mass: 330000.0, name: 'Sun', owner: $elm$core$Maybe$Nothing, v: 0, year: 0});
-var $author$project$Planet$earth = $author$project$Planet$PlanetInit(
+var $author$project$Planets$sun = $author$project$Planets$PlanetInit(
+	{color: 'yellow', d: 1000, dist: 0, mass: 330000.0, name: 'Sun', owner: $elm$core$Maybe$Nothing, v: 0, year: 0});
+var $author$project$Planets$earth = $author$project$Planets$PlanetInit(
 	{
 		color: 'blue',
 		d: 12756,
 		dist: 149.6,
 		mass: 1.0,
 		name: 'Earth',
-		owner: $elm$core$Maybe$Just($author$project$Planet$sun),
+		owner: $elm$core$Maybe$Just($author$project$Planets$sun),
 		v: 29.765,
 		year: 365.26
 	});
-var $author$project$Planet$jupiter = $author$project$Planet$PlanetInit(
+var $author$project$Planets$jupiter = $author$project$Planets$PlanetInit(
 	{
 		color: 'red',
 		d: 142800,
 		dist: 778.3,
 		mass: 317.9,
 		name: 'Jupiter',
-		owner: $elm$core$Maybe$Just($author$project$Planet$sun),
+		owner: $elm$core$Maybe$Just($author$project$Planets$sun),
 		v: 13.06,
 		year: 11.863 * 365.26
 	});
-var $author$project$Planet$mars = $author$project$Planet$PlanetInit(
+var $author$project$Planets$mars = $author$project$Planets$PlanetInit(
 	{
 		color: 'orange',
 		d: 6794,
 		dist: 227.9,
 		mass: 0.107,
 		name: 'Mars',
-		owner: $elm$core$Maybe$Just($author$project$Planet$sun),
+		owner: $elm$core$Maybe$Just($author$project$Planets$sun),
 		v: 24.14,
 		year: 687
 	});
-var $author$project$Planet$merkur = $author$project$Planet$PlanetInit(
+var $author$project$Planets$merkur = $author$project$Planets$PlanetInit(
 	{
 		color: 'gray',
 		d: 4878,
 		dist: 57.9,
 		mass: 0.055,
 		name: 'Merkur',
-		owner: $elm$core$Maybe$Just($author$project$Planet$sun),
+		owner: $elm$core$Maybe$Just($author$project$Planets$sun),
 		v: 47.6,
 		year: 58.65
 	});
-var $author$project$Planet$moon = $author$project$Planet$PlanetInit(
+var $author$project$Planets$moon = $author$project$Planets$PlanetInit(
 	{
 		color: 'gray',
 		d: 3476,
 		dist: 0.384404,
 		mass: 0.0123,
 		name: 'Hold',
-		owner: $elm$core$Maybe$Just($author$project$Planet$earth),
+		owner: $elm$core$Maybe$Just($author$project$Planets$earth),
 		v: 1.025,
 		year: 27.21222
 	});
-var $author$project$Planet$neptunus = $author$project$Planet$PlanetInit(
+var $author$project$Planets$neptunus = $author$project$Planets$PlanetInit(
 	{
 		color: 'blue',
 		d: 48600,
 		dist: 4504,
 		mass: 17.2,
 		name: 'Neptunus',
-		owner: $elm$core$Maybe$Just($author$project$Planet$sun),
+		owner: $elm$core$Maybe$Just($author$project$Planets$sun),
 		v: 5.43,
 		year: 163.73 * 365.26
 	});
-var $author$project$Planet$szaturnus = $author$project$Planet$PlanetInit(
+var $author$project$Planets$szaturnus = $author$project$Planets$PlanetInit(
 	{
 		color: 'gold',
 		d: 120540,
 		dist: 1429,
 		mass: 95.16,
 		name: 'Szaturnus',
-		owner: $elm$core$Maybe$Just($author$project$Planet$sun),
+		owner: $elm$core$Maybe$Just($author$project$Planets$sun),
 		v: 9.65,
 		year: 29.42 * 365.26
 	});
-var $author$project$Planet$uranus = $author$project$Planet$PlanetInit(
+var $author$project$Planets$uranus = $author$project$Planets$PlanetInit(
 	{
 		color: 'lightblue',
 		d: 51118,
 		dist: 2875,
 		mass: 14.54,
 		name: 'Uranus',
-		owner: $elm$core$Maybe$Just($author$project$Planet$sun),
+		owner: $elm$core$Maybe$Just($author$project$Planets$sun),
 		v: 6.83,
 		year: 83.75 * 365.26
 	});
-var $author$project$Planet$venus = $author$project$Planet$PlanetInit(
+var $author$project$Planets$venus = $author$project$Planets$PlanetInit(
 	{
 		color: 'orange',
 		d: 12104,
 		dist: 108.2,
 		mass: 0.815,
 		name: 'Venus',
-		owner: $elm$core$Maybe$Just($author$project$Planet$sun),
+		owner: $elm$core$Maybe$Just($author$project$Planets$sun),
 		v: 35.04,
 		year: 224.7
 	});
-var $author$project$Planet$masses = _List_fromArray(
-	[$author$project$Planet$sun, $author$project$Planet$merkur, $author$project$Planet$venus, $author$project$Planet$earth, $author$project$Planet$moon, $author$project$Planet$mars, $author$project$Planet$jupiter, $author$project$Planet$szaturnus, $author$project$Planet$uranus, $author$project$Planet$neptunus]);
+var $author$project$Planets$masses = _List_fromArray(
+	[$author$project$Planets$sun, $author$project$Planets$merkur, $author$project$Planets$venus, $author$project$Planets$earth, $author$project$Planets$moon, $author$project$Planets$mars, $author$project$Planets$jupiter, $author$project$Planets$szaturnus, $author$project$Planets$uranus, $author$project$Planets$neptunus]);
 var $elm$time$Time$Posix = function (a) {
 	return {$: 'Posix', a: a};
 };
@@ -5347,15 +5374,15 @@ var $author$project$Vector$add = F2(
 		return {x: l.x + r.x, y: l.y + r.y, z: l.z + r.z};
 	});
 var $author$project$Vector$zero = A3($author$project$Vector$Vector, 0, 0, 0);
-var $author$project$Planet$start = function (b) {
+var $author$project$Planets$start = function (b) {
 	var _v0 = function () {
 		var planet = b.a;
 		var _v2 = planet.owner;
 		if (_v2.$ === 'Just') {
 			var o = _v2.a;
 			return _Utils_Tuple2(
-				$author$project$Planet$start(o).pos,
-				$author$project$Planet$start(o).v);
+				$author$project$Planets$start(o).pos,
+				$author$project$Planets$start(o).v);
 		} else {
 			return _Utils_Tuple2($author$project$Vector$zero, $author$project$Vector$zero);
 		}
@@ -5382,16 +5409,9 @@ var $author$project$Planet$start = function (b) {
 var $elm$time$Time$utc = A2($elm$time$Time$Zone, 0, _List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A8(
-			$author$project$Main$Model,
-			$elm$time$Time$utc,
-			$elm$time$Time$millisToPosix(0),
-			A2($elm$core$List$map, $author$project$Planet$start, $author$project$Planet$masses),
-			1e-9,
-			1,
-			0,
-			0,
-			6000),
+		$author$project$Main$Model($elm$time$Time$utc)(
+			$elm$time$Time$millisToPosix(0))(
+			A2($elm$core$List$map, $author$project$Planets$start, $author$project$Planets$masses))(1e-9)(1)(0)(0)(6000)('1E30')('0')('-13.6e3')('0')('500e9')('0')('0'),
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -5801,6 +5821,28 @@ var $elm$time$Time$every = F2(
 var $author$project$Main$subscriptions = function (_v0) {
 	return A2($elm$time$Time$every, 100, $author$project$Main$Tick);
 };
+var $elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$repeatedApply = F3(
 	function (n, data, func) {
@@ -5819,6 +5861,22 @@ var $author$project$Main$repeatedApply = F3(
 			}
 		}
 	});
+var $elm$core$String$toFloat = _String_toFloat;
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Main$toFloatx = function (t) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		0,
+		$elm$core$String$toFloat(t));
+};
 var $author$project$Vector$scalarMul = F2(
 	function (l, r) {
 		return ((l.x * r.x) + (l.y * r.y)) + (l.z * r.z);
@@ -5835,7 +5893,7 @@ var $author$project$Vector$sub = F2(
 	function (l, r) {
 		return {x: l.x - r.x, y: l.y - r.y, z: l.z - r.z};
 	});
-var $author$project$Planet$gravityForce = F2(
+var $author$project$Planets$gravityForce = F2(
 	function (b1, b2) {
 		var rv = A2($author$project$Vector$sub, b2.pos, b1.pos);
 		var r2 = $author$project$Vector$len2(rv);
@@ -5846,7 +5904,7 @@ var $author$project$Planet$gravityForce = F2(
 		var f = ((6.67259e-11 * b1.mass) * b2.mass) / r2;
 		return (r2 < 1) ? $author$project$Vector$zero : A2($author$project$Vector$mul, rd, f);
 	});
-var $author$project$Planet$updatePlanet = F4(
+var $author$project$Planets$updatePlanet = F4(
 	function (store, dt, blist, b) {
 		var newpos = A2(
 			$author$project$Vector$add,
@@ -5854,7 +5912,7 @@ var $author$project$Planet$updatePlanet = F4(
 			A2($author$project$Vector$mul, b.v, dt));
 		var forces = A2(
 			$elm$core$List$map,
-			$author$project$Planet$gravityForce(b),
+			$author$project$Planets$gravityForce(b),
 			blist);
 		var f = A3($elm$core$List$foldr, $author$project$Vector$add, $author$project$Vector$zero, forces);
 		var a = A2($author$project$Vector$mul, f, 1.0 / b.mass);
@@ -5870,11 +5928,11 @@ var $author$project$Planet$updatePlanet = F4(
 				v: newv
 			});
 	});
-var $author$project$Planet$updatePlanets = F3(
+var $author$project$Planets$updatePlanets = F3(
 	function (store, dt, blist) {
 		return A2(
 			$elm$core$List$map,
-			A3($author$project$Planet$updatePlanet, store, dt, blist),
+			A3($author$project$Planets$updatePlanet, store, dt, blist),
 			blist);
 	});
 var $author$project$Main$update = F2(
@@ -5888,14 +5946,14 @@ var $author$project$Main$update = F2(
 						{
 							count: model.count + 1,
 							masses: A3(
-								$author$project$Planet$updatePlanets,
+								$author$project$Planets$updatePlanets,
 								true,
 								60,
 								A3(
 									$author$project$Main$repeatedApply,
 									model.speed,
 									model.masses,
-									A2($author$project$Planet$updatePlanets, false, 15))),
+									A2($author$project$Planets$updatePlanets, false, 15))),
 							time: newTime
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -5948,7 +6006,7 @@ var $author$project$Main$update = F2(
 						model,
 						{speed: model.speed * 2}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'SpeedMinus':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -5956,14 +6014,132 @@ var $author$project$Main$update = F2(
 							speed: (model.speed > 1) ? ((model.speed / 2) | 0) : 1
 						}),
 					$elm$core$Platform$Cmd$none);
+			case 'Mass':
+				var m = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{mass: m}),
+					$elm$core$Platform$Cmd$none);
+			case 'SpeedX':
+				var v = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{vx: v}),
+					$elm$core$Platform$Cmd$none);
+			case 'SpeedY':
+				var v = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{vy: v}),
+					$elm$core$Platform$Cmd$none);
+			case 'SpeedZ':
+				var v = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{vz: v}),
+					$elm$core$Platform$Cmd$none);
+			case 'PosX':
+				var p = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{px: p}),
+					$elm$core$Platform$Cmd$none);
+			case 'PosY':
+				var p = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{py: p}),
+					$elm$core$Platform$Cmd$none);
+			case 'PosZ':
+				var p = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{pz: p}),
+					$elm$core$Platform$Cmd$none);
+			case 'StartCommet':
+				var commet = {
+					color: 'Black',
+					d: 6000000,
+					history: _List_Nil,
+					mass: $author$project$Main$toFloatx(model.mass),
+					name: 'Commet',
+					pos: A3(
+						$author$project$Vector$Vector,
+						$author$project$Main$toFloatx(model.px),
+						$author$project$Main$toFloatx(model.py),
+						$author$project$Main$toFloatx(model.pz)),
+					v: A3(
+						$author$project$Vector$Vector,
+						$author$project$Main$toFloatx(model.vx),
+						$author$project$Main$toFloatx(model.vy),
+						$author$project$Main$toFloatx(model.vz))
+				};
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							masses: A2($elm$core$List$cons, commet, model.masses)
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var m = function () {
+					var _v1 = A2($elm$core$List$drop, model.idx, model.masses);
+					if (_v1.b) {
+						var b = _v1.a;
+						return _Utils_update(
+							model,
+							{
+								mass: $elm$core$String$fromFloat(b.mass),
+								px: $elm$core$String$fromFloat(b.pos.x),
+								py: $elm$core$String$fromFloat(b.pos.y),
+								pz: $elm$core$String$fromFloat(b.pos.z),
+								vx: $elm$core$String$fromFloat(b.v.x),
+								vy: $elm$core$String$fromFloat(b.v.y),
+								vz: $elm$core$String$fromFloat(b.v.z)
+							});
+					} else {
+						return model;
+					}
+				}();
+				return _Utils_Tuple2(m, $elm$core$Platform$Cmd$none);
 		}
 	});
+var $author$project$Main$FillCommet = {$: 'FillCommet'};
+var $author$project$Main$Mass = function (a) {
+	return {$: 'Mass', a: a};
+};
 var $author$project$Main$PlanetMinus = {$: 'PlanetMinus'};
 var $author$project$Main$PlanetPlus = {$: 'PlanetPlus'};
 var $author$project$Main$PlanetZoomIn = {$: 'PlanetZoomIn'};
 var $author$project$Main$PlanetZoomOut = {$: 'PlanetZoomOut'};
+var $author$project$Main$PosX = function (a) {
+	return {$: 'PosX', a: a};
+};
+var $author$project$Main$PosY = function (a) {
+	return {$: 'PosY', a: a};
+};
+var $author$project$Main$PosZ = function (a) {
+	return {$: 'PosZ', a: a};
+};
 var $author$project$Main$SpeedMinus = {$: 'SpeedMinus'};
 var $author$project$Main$SpeedPlus = {$: 'SpeedPlus'};
+var $author$project$Main$SpeedX = function (a) {
+	return {$: 'SpeedX', a: a};
+};
+var $author$project$Main$SpeedY = function (a) {
+	return {$: 'SpeedY', a: a};
+};
+var $author$project$Main$SpeedZ = function (a) {
+	return {$: 'SpeedZ', a: a};
+};
+var $author$project$Main$StartCommet = {$: 'StartCommet'};
 var $author$project$Main$ZoomIn = {$: 'ZoomIn'};
 var $author$project$Main$ZoomOut = {$: 'ZoomOut'};
 var $elm$html$Html$button = _VirtualDom_node('button');
@@ -5979,27 +6155,6 @@ var $elm$core$List$concat = function (lists) {
 	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
 };
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$core$List$drop = F2(
-	function (n, list) {
-		drop:
-		while (true) {
-			if (n <= 0) {
-				return list;
-			} else {
-				if (!list.b) {
-					return list;
-				} else {
-					var x = list.a;
-					var xs = list.b;
-					var $temp$n = n - 1,
-						$temp$list = xs;
-					n = $temp$n;
-					list = $temp$list;
-					continue drop;
-				}
-			}
-		}
-	});
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
@@ -6023,11 +6178,75 @@ var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$viewInput = F4(
+	function (t, p, v, toMsg) {
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text(p),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_(t),
+							$elm$html$Html$Attributes$placeholder(p),
+							$elm$html$Html$Attributes$value(v),
+							$elm$html$Html$Events$onInput(toMsg)
+						]),
+					_List_Nil)
+				]));
+	});
 var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
 var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
 var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
 var $elm$svg$Svg$line = $elm$svg$Svg$trustedNode('line');
 var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
@@ -6110,6 +6329,34 @@ var $author$project$Main$view = function (model) {
 		_List_Nil,
 		_List_fromArray(
 			[
+				A4($author$project$Main$viewInput, 'text', 'Mass ', model.mass, $author$project$Main$Mass),
+				A4($author$project$Main$viewInput, 'text', 'Speed X ', model.vx, $author$project$Main$SpeedX),
+				A4($author$project$Main$viewInput, 'text', 'Speed Y ', model.vy, $author$project$Main$SpeedY),
+				A4($author$project$Main$viewInput, 'text', 'Speed Z ', model.vz, $author$project$Main$SpeedZ),
+				A4($author$project$Main$viewInput, 'text', 'Pos X ', model.px, $author$project$Main$PosX),
+				A4($author$project$Main$viewInput, 'text', 'Pos Y ', model.py, $author$project$Main$PosY),
+				A4($author$project$Main$viewInput, 'text', 'Pos Z ', model.pz, $author$project$Main$PosZ),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick($author$project$Main$FillCommet)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('FillCommet commet with center!')
+					])),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick($author$project$Main$StartCommet)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Start commet!')
+					])),
+				A2($elm$html$Html$div, _List_Nil, _List_Nil),
 				A2(
 				$elm$html$Html$button,
 				_List_fromArray(

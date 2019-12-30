@@ -1,14 +1,15 @@
 module Main exposing (..)
 
-import Browser
 import Task
 import Time
-import Html exposing (Html, button, div, text)
+import Browser
+import Html exposing (Html, button, div, text, input)
+import Html.Events exposing (onClick, onInput)
+import Html.Attributes exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Html.Events exposing (onClick)
 import Vector exposing (..)
-import Planet exposing (..)
+import Planets exposing (..)
 
 -- MAIN
 main =
@@ -23,18 +24,36 @@ main =
 
 type alias Model =
   { zone : Time.Zone
-  , time : Time.Posix
+  , time : Time.Posix  
   , masses : List Planet
   , zoom : Float
   , planetZoom : Float
   , idx : Int
   , count : Int
   , speed : Int
+  , mass : String
+  , vx : String
+  , vy : String
+  , vz : String
+  , px : String
+  , py : String
+  , pz : String
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( Model Time.utc (Time.millisToPosix 0) (List.map start masses) 1e-9 1 0 0 6000
+  ( Model 
+      Time.utc 
+      (Time.millisToPosix 0)       
+      (List.map Planets.start masses) 
+      1e-9 
+      1 
+      0 
+      0 
+      6000
+      "1E30"
+      "0" "-13.6e3" "0"
+      "500e9" "0" "0"
   , Cmd.batch
       [ Task.perform AdjustTimeZone Time.here
       , Task.perform Tick Time.now
@@ -54,6 +73,15 @@ type Msg
   | PlanetMinus
   | SpeedPlus
   | SpeedMinus
+  | Mass String
+  | SpeedX String
+  | SpeedY String
+  | SpeedZ String
+  | PosX String
+  | PosY String
+  | PosZ String
+  | FillCommet
+  | StartCommet
 
 repeatedApply: Int -> a -> (a -> a) -> a
 repeatedApply n data func =
@@ -62,6 +90,9 @@ repeatedApply n data func =
   else 
     repeatedApply (n - 1) (func data) func
 
+toFloatx : String -> Float
+toFloatx t =
+  Maybe.withDefault 0 (String.toFloat t)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -119,6 +150,46 @@ update msg model =
               1 }
         , Cmd.none
         )
+      
+      Mass m  ->
+        ( { model | mass = m }, Cmd.none )
+      SpeedX v ->
+        ( { model | vx = v }, Cmd.none )
+      SpeedY v ->
+        ( { model | vy = v }, Cmd.none )
+      SpeedZ v ->
+        ( { model | vz = v }, Cmd.none )
+      PosX p ->
+        ( { model | px = p }, Cmd.none )
+      PosY p ->
+        ( { model | py = p }, Cmd.none )
+      PosZ p ->
+        ( { model | pz = p }, Cmd.none )
+
+      StartCommet -> 
+        let 
+          commet = 
+            { name = "Commet"
+            , color = "Black"
+            , mass = toFloatx model.mass
+            , d = 6000000
+            , v = Vector (toFloatx model.vx) (toFloatx model.vy) (toFloatx model.vz)
+            , pos = Vector (toFloatx model.px) (toFloatx model.py) (toFloatx model.pz)
+            , history = []
+            }
+        in 
+          ( { model | masses = commet :: model.masses } , Cmd.none )
+      
+      FillCommet -> 
+        let 
+          m = case List.drop model.idx model.masses of
+            (b :: _) -> { model | mass = String.fromFloat b.mass
+                        , vx = String.fromFloat b.v.x, vy = String.fromFloat b.v.y, vz = String.fromFloat b.v.z
+                        , px = String.fromFloat b.pos.x, py = String.fromFloat b.pos.y, pz = String.fromFloat b.pos.z 
+                        }
+            _ -> model
+        in 
+          ( m, Cmd.none )
 
 -- SUBSCRIPTIONS
 
@@ -173,6 +244,10 @@ viewPlanet scale bolygoscale ccx ccy planet =
       -- :: viewPath2 scale ccx ccy 1 planet.color planet.history
       :: viewPath1 scale ccx ccy planet.color planet.history
 
+viewInput : String -> String -> String -> (String -> msg) -> Html msg
+viewInput t p v toMsg =
+  div [] [Html.text p, input [ Html.Attributes.type_ t, placeholder p, value v, onInput toMsg ] []]
+
 view : Model -> Html Msg
 view model =
   let 
@@ -186,7 +261,17 @@ view model =
   --   second = toFloat (Time.toSecond model.zone model.time)
   in
   div []
-    [ button [ onClick ZoomOut ] [ Html.text "scale -" ]
+    [ (viewInput "text" "Mass " model.mass Mass)
+    , (viewInput "text" "Speed X " model.vx SpeedX)      
+    , (viewInput "text" "Speed Y " model.vy SpeedY)
+    , (viewInput "text" "Speed Z " model.vz SpeedZ)
+    , (viewInput "text" "Pos X " model.px PosX)
+    , (viewInput "text" "Pos Y " model.py PosY)
+    , (viewInput "text" "Pos Z " model.pz PosZ)
+    , button [ onClick FillCommet ] [ Html.text "FillCommet commet with center!" ]
+    , button [ onClick StartCommet ] [ Html.text "Start commet!" ]
+    , div [] []
+    , button [ onClick ZoomOut ] [ Html.text "scale -" ]
     , button [ onClick ZoomIn ] [ Html.text "scale +" ]
     , button [ onClick PlanetZoomOut ] [ Html.text "planet scale -" ]
     , button [ onClick PlanetZoomIn ] [ Html.text "planet scale +" ]
@@ -196,8 +281,8 @@ view model =
     , button [ onClick SpeedPlus ] [ Html.text "speed +" ]
     , svg
       [ viewBox "0 0 1024 600"
-      , width "1024"
-      , height "600"
+      , Svg.Attributes.width "1024"
+      , Svg.Attributes.height "600"
       ]
       (List.concat (List.map (viewPlanet model.zoom model.planetZoom (512 - center.x * model.zoom) (300 - center.y * model.zoom)) model.masses))
     ]

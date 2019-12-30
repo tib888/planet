@@ -1,4 +1,4 @@
-module Planet exposing (..)
+module Planets exposing (..)
 import Vector exposing (..)
 
 type PlanetInit = 
@@ -18,7 +18,7 @@ sun = PlanetInit
   { name = "Sun"
   , color = "yellow"
   , mass = 330000.0
-  , d = 0 -- 1392000  -- /10 used to scale display
+  , d = 1000         -- 1392000 
   , dist = 0
   , v = 0 
   , year = 0
