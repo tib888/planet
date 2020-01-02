@@ -10,6 +10,7 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Vector exposing (..)
 import Planets exposing (..)
+import CommetForm exposing (..)
 
 -- MAIN
 main =
@@ -31,13 +32,7 @@ type alias Model =
   , idx : Int
   , count : Int
   , speed : Int
-  , mass : String
-  , vx : String
-  , vy : String
-  , vz : String
-  , px : String
-  , py : String
-  , pz : String
+  , commetForm : CommetForm.Model
   }
 
 init : () -> (Model, Cmd Msg)
@@ -51,9 +46,7 @@ init _ =
       0 
       0 
       6000
-      "1E30"
-      "0" "-13.6e3" "0"
-      "500e9" "0" "0"
+      CommetForm.init
   , Cmd.batch
       [ Task.perform AdjustTimeZone Time.here
       , Task.perform Tick Time.now
@@ -73,15 +66,9 @@ type Msg
   | PlanetMinus
   | SpeedPlus
   | SpeedMinus
-  | Mass String
-  | SpeedX String
-  | SpeedY String
-  | SpeedZ String
-  | PosX String
-  | PosY String
-  | PosZ String
   | FillCommet
   | StartCommet
+  | CommetFormMsgs CommetForm.Msg
 
 repeatedApply: Int -> a -> (a -> a) -> a
 repeatedApply n data func =
@@ -149,47 +136,21 @@ update msg model =
             else 
               1 }
         , Cmd.none
-        )
+        )          
       
-      Mass m  ->
-        ( { model | mass = m }, Cmd.none )
-      SpeedX v ->
-        ( { model | vx = v }, Cmd.none )
-      SpeedY v ->
-        ( { model | vy = v }, Cmd.none )
-      SpeedZ v ->
-        ( { model | vz = v }, Cmd.none )
-      PosX p ->
-        ( { model | px = p }, Cmd.none )
-      PosY p ->
-        ( { model | py = p }, Cmd.none )
-      PosZ p ->
-        ( { model | pz = p }, Cmd.none )
-
-      StartCommet -> 
-        let 
-          commet = 
-            { name = "Commet"
-            , color = "Black"
-            , mass = toFloatx model.mass
-            , d = 6000000
-            , v = Vector (toFloatx model.vx) (toFloatx model.vy) (toFloatx model.vz)
-            , pos = Vector (toFloatx model.px) (toFloatx model.py) (toFloatx model.pz)
-            , history = []
-            }
-        in 
-          ( { model | masses = commet :: model.masses } , Cmd.none )
+      StartCommet ->         
+        ( { model | masses = (CommetForm.toMass model.commetForm) :: model.masses } , Cmd.none )
       
       FillCommet -> 
         let 
           m = case List.drop model.idx model.masses of
-            (b :: _) -> { model | mass = String.fromFloat b.mass
-                        , vx = String.fromFloat b.v.x, vy = String.fromFloat b.v.y, vz = String.fromFloat b.v.z
-                        , px = String.fromFloat b.pos.x, py = String.fromFloat b.pos.y, pz = String.fromFloat b.pos.z 
-                        }
+            (b :: _) -> { model | commetForm = CommetForm.fromMass b }
             _ -> model
         in 
           ( m, Cmd.none )
+
+      CommetFormMsgs m  ->
+        ( { model | commetForm = CommetForm.update m model.commetForm}, Cmd.none )
 
 -- SUBSCRIPTIONS
 
@@ -244,9 +205,6 @@ viewPlanet scale bolygoscale ccx ccy planet =
       -- :: viewPath2 scale ccx ccy 1 planet.color planet.history
       :: viewPath1 scale ccx ccy planet.color planet.history
 
-viewInput : String -> String -> String -> (String -> msg) -> Html msg
-viewInput t p v toMsg =
-  div [] [Html.text p, input [ Html.Attributes.type_ t, placeholder p, value v, onInput toMsg ] []]
 
 view : Model -> Html Msg
 view model =
@@ -255,19 +213,9 @@ view model =
       case List.drop model.idx model.masses of
         (b :: _) -> b.pos
         _ -> zero
-
-  --   hour   = toFloat (Time.toHour   model.zone model.time)
-  --   minute = toFloat (Time.toMinute model.zone model.time)
-  --   second = toFloat (Time.toSecond model.zone model.time)
   in
   div []
-    [ (viewInput "text" "Mass " model.mass Mass)
-    , (viewInput "text" "Speed X " model.vx SpeedX)      
-    , (viewInput "text" "Speed Y " model.vy SpeedY)
-    , (viewInput "text" "Speed Z " model.vz SpeedZ)
-    , (viewInput "text" "Pos X " model.px PosX)
-    , (viewInput "text" "Pos Y " model.py PosY)
-    , (viewInput "text" "Pos Z " model.pz PosZ)
+    [ Html.map CommetFormMsgs (CommetForm.view model.commetForm)
     , button [ onClick FillCommet ] [ Html.text "FillCommet commet with center!" ]
     , button [ onClick StartCommet ] [ Html.text "Start commet!" ]
     , div [] []

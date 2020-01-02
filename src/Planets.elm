@@ -16,9 +16,9 @@ type PlanetInit =
 sun: PlanetInit
 sun = PlanetInit
   { name = "Sun"
-  , color = "yellow"
+  , color = "tan"
   , mass = 330000.0
-  , d = 1000         -- 1392000 
+  , d = 10000         -- 1392000 
   , dist = 0
   , v = 0 
   , year = 0
